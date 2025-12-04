@@ -430,6 +430,33 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiComicComic extends Struct.CollectionTypeSchema {
+  collectionName: 'comics';
+  info: {
+    displayName: 'Comic';
+    pluralName: 'comics';
+    singularName: 'comic';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    comicCharacter: Schema.Attribute.String;
+    comicName: Schema.Attribute.String;
+    comicnumber: Schema.Attribute.UID;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::comic.comic'> &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiDailyWorkLogDailyWorkLog
   extends Struct.CollectionTypeSchema {
   collectionName: 'daily_work_logs';
@@ -976,6 +1003,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::comic.comic': ApiComicComic;
       'api::daily-work-log.daily-work-log': ApiDailyWorkLogDailyWorkLog;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

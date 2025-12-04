@@ -88,7 +88,9 @@ npm run start
 2. Create your admin account
 3. Complete registration
 
-## 📝 Content Type: Daily Work Logs
+## 📝 Content Types
+
+### Daily Work Logs
 
 **API Endpoint:** `/api/daily-work-logs`
 
@@ -113,6 +115,19 @@ npm run start
 6. Upload relevant screenshots or files
 7. Click **Save** (draft) or **Save & Publish** (live)
 
+### Comic
+
+**API Endpoint:** `/api/comics`
+
+**Schema Details:**
+- **Collection Type:** `comics`
+- **Draft & Publish:** Enabled
+
+**Fields:**
+- `comicName` (String) - Name of the comic
+- `comicnumber` (UID) - Unique identifier for the comic
+- `comicCharacter` (String) - Main character of the comic
+
 
 ## ⚙️ Configuration
 
@@ -128,6 +143,22 @@ npm run develop    # Development with auto-reload
 npm run start      # Production mode
 npm run build      # Build admin panel
 ```
+
+## 🐳 Docker
+
+### Build Docker Image
+
+```bash
+docker build -t strapi-app .
+```
+
+### Run Docker Container
+
+```bash
+docker run -p 1337:1337 strapi-app
+```
+
+Access admin panel at: **http://localhost:1337/admin**
 
 ## 📦 Push to GitHub
 
