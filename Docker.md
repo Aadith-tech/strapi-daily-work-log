@@ -1,10 +1,8 @@
-# 🐳 Docker Deep-Dive Documentation
-
-> A comprehensive guide to understanding Docker, its architecture, and how to use it effectively.
+# Docker Deep-Dive Documentation
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [The Problem Docker Solves](#-the-problem-docker-solves)
 2. [Virtual Machines vs Docker](#-virtual-machines-vs-docker)
@@ -18,15 +16,15 @@
 
 ---
 
-## 🎯 The Problem Docker Solves
+## The Problem Docker Solves
 
 ### The "It Works on My Machine" Problem
 
 Before Docker, developers faced a common nightmare:
 
 ```
-Developer: "The app works perfectly on my laptop!"
-Operations: "Well, it's crashing on the server..."
+Developer: "The app works perfectly on my laptop"
+Operations: "it's crashing on the server
 ```
 
 ### Key Problems Docker Addresses:
@@ -99,7 +97,7 @@ Operations: "Well, it's crashing on the server..."
 
 ---
 
-## 🏗️ Docker Architecture
+## Docker Architecture
 
 ### Overview
 
@@ -165,7 +163,7 @@ Docker uses a **client-server architecture**:
 
 ---
 
-## 📥 What Gets Installed with Docker?
+## What Gets Installed with Docker?
 
 When you install Docker Desktop (or Docker Engine), you get:
 
@@ -173,24 +171,24 @@ When you install Docker Desktop (or Docker Engine), you get:
 
 ```
 Docker Installation
-├── 🔧 Docker Engine (dockerd)
+├── Docker Engine (dockerd)
 │   ├── Docker Daemon - Core background service
 │   ├── containerd - Container runtime
 │   └── runc - Low-level container runtime
 │
-├── 💻 Docker CLI (docker)
+├──  Docker CLI (docker)
 │   └── Command-line tool for Docker commands
 │
-├── 🔨 Docker Compose (docker-compose)
+├── Docker Compose (docker-compose)
 │   └── Multi-container orchestration tool
 │
-├── 🖥️ Docker Desktop (GUI - Mac/Windows)
+├── ️ Docker Desktop (GUI - Mac/Windows)
 │   ├── System tray application
 │   ├── Kubernetes cluster (optional)
 │   ├── VM for running Linux containers
 │   └── Dashboard for container management
 │
-└── 🌐 Docker Networking
+└──  Docker Networking
     ├── bridge - Default network driver
     ├── host - Remove network isolation
     └── overlay - Multi-host networking
@@ -214,15 +212,11 @@ docker compose version
 
 ---
 
-## 📝 Dockerfile Deep Dive
+##  Dockerfile Deep Dive
 
 ### Our Project's Dockerfile Explained
 
 ```dockerfile
-# ============================================
-# DOCKERFILE FOR STRAPI APPLICATION
-# ============================================
-
 # ---------------------------------------------
 # BASE IMAGE
 # ---------------------------------------------
@@ -329,7 +323,7 @@ CMD ["npm", "run", "develop"]
 
 ---
 
-## 🔑 Key Docker Commands
+## Key Docker Commands
 
 ### Image Commands
 
@@ -463,7 +457,7 @@ docker events
 
 ---
 
-## 🌐 Docker Networking
+## Docker Networking
 
 ### Network Types
 
@@ -599,7 +593,7 @@ networks:
 
 ---
 
-## 💾 Volumes & Persistence
+## Volumes & Persistence
 
 ### The Problem
 
@@ -689,7 +683,7 @@ services:
 
 ---
 
-## 🎼 Docker Compose
+## Docker Compose
 
 ### What is Docker Compose?
 
@@ -712,10 +706,6 @@ $ docker run -d --network net \
 ### docker-compose.yml Explained
 
 ```yaml
-# ============================================
-# DOCKER COMPOSE FILE FOR STRAPI
-# ============================================
-
 # Docker Compose file format version
 version: '3.1'
 

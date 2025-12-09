@@ -258,3 +258,226 @@ git remote add origin https://github.com/YOUR_USERNAME/REPO_NAME.git
 git push -u origin main
 ```
 
+---
+
+## 🚀 AWS Deployment with Terraform (EC2 + RDS PostgreSQL)
+
+This project includes complete Terraform configuration to deploy Strapi on AWS with:
+- **EC2 Instance** - Runs the Strapi Docker container
+- **RDS PostgreSQL** - Managed database service
+- **Default VPC** - Uses AWS default VPC (no custom VPC creation needed)
+- **Security Groups** - Proper network access controls
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              AWS Cloud                                       │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │                       Default VPC                                      │  │
+│  │                                                                        │  │
+│  │   ┌─────────────────────────────────────────────────────────────────┐ │  │
+│  │   │                    Default Subnets                              │ │  │
+│  │   │                                                                  │ │  │
+│  │   │  ┌───────────────────┐      ┌───────────────────────────┐       │ │  │
+│  │   │  │   EC2 Instance    │      │    RDS PostgreSQL         │       │ │  │
+│  │   │  │   (Strapi App)    │─────►│    (Managed DB)           │       │ │  │
+│  │   │  │   Port: 1337      │      │    Port: 5432             │       │ │  │
+│  │   │  └─────────┬─────────┘      └───────────────────────────┘       │ │  │
+│  │   │            │                                                     │ │  │
+│  │   └────────────┼─────────────────────────────────────────────────────┘ │  │
+│  │                │                                                        │  │
+│  │   ┌────────────┴────────────┐                                          │  │
+│  │   │    Internet Gateway     │                                          │  │
+│  │   └────────────┬────────────┘                                          │  │
+│  └────────────────┼───────────────────────────────────────────────────────┘  │
+│                   │                                                          │
+└───────────────────┼──────────────────────────────────────────────────────────┘
+                    │
+                    ▼
+              🌐 Internet
+              (Users access via Public IP)
+```
+
+### Prerequisites
+
+1. **AWS Account** with programmatic access
+2. **Terraform** installed (v1.0+)
+3. **Docker Hub Account** (to push your image)
+4. **AWS CLI** configured with credentials
+
+### Step 1: Build & Push Docker Image
+
+```bash
+# Navigate to project directory
+cd myStrapi
+
+# Build the Docker image for linux/amd64 (EC2 compatible)
+docker buildx build --platform linux/amd64 -t your-dockerhub-username/strapi-daily-logs:latest --push .
+
+# Or build locally first, then push
+docker build -t your-dockerhub-username/strapi-daily-logs:latest .
+docker login
+docker push your-dockerhub-username/strapi-daily-logs:latest
+```
+
+> **Note:** If building on Apple Silicon (M1/M2), you MUST use `--platform linux/amd64` for EC2 compatibility.
+
+### Step 2: Generate SSH Key
+
+```bash
+# Generate SSH key pair for EC2 access
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/strapi-key
+
+# View your public key (copy this)
+cat ~/.ssh/strapi-key.pub
+```
+
+### Step 3: Configure Terraform Variables
+
+```bash
+cd terraform
+
+# Copy example variables
+cp terraform.tfvars.example terraform.tfvars
+
+# Edit with your values
+nano terraform.tfvars
+```
+
+**Required variables in `terraform.tfvars`:**
+
+```hcl
+# AWS Region
+aws_region = "ap-south-1"
+
+# SSH Public Key (from Step 2)
+ssh_public_key = "ssh-rsa AAAA..."
+
+# RDS Password (choose a strong password)
+db_password = "YourSecurePassword123!"
+
+# Docker Image (from Step 1)
+docker_image = "your-dockerhub-username/strapi-daily-logs:latest"
+
+# Generate these secrets:
+# openssl rand -base64 32
+app_keys         = "generated-key-1,generated-key-2"
+api_token_salt   = "generated-api-token-salt"
+admin_jwt_secret = "generated-admin-jwt-secret"
+jwt_secret       = "generated-jwt-secret"
+```
+
+### Step 4: Deploy with Terraform
+
+```bash
+# Initialize Terraform
+terraform init
+
+# Preview changes
+terraform plan
+
+# Apply configuration (creates all AWS resources)
+terraform apply
+```
+
+**Resources Created:**
+- 2 Security Groups (EC2, RDS)
+- 1 DB Subnet Group (uses default subnets)
+- 1 EC2 Instance (t2.small, 30GB gp3 volume)
+- 1 RDS PostgreSQL Instance (db.t3.micro)
+- 1 SSH Key Pair
+
+### Step 5: Access Strapi
+
+After deployment (~5-10 minutes for RDS):
+
+```bash
+# Get outputs
+terraform output
+
+# Access Strapi Admin
+http://<ec2-public-ip>:1337/admin
+```
+
+### Step 6: SSH into EC2 (Optional)
+
+```bash
+# Connect to EC2
+ssh -i ~/.ssh/strapi-key ec2-user@<ec2-public-ip>
+
+# View container logs
+docker logs strapi
+
+# Check container status
+docker ps
+```
+
+### Terraform Files Structure
+
+```
+terraform/
+├── main.tf              # Main infrastructure (VPC, EC2, RDS)
+├── variables.tf         # Variable definitions
+├── outputs.tf           # Output values
+├── terraform.tfvars.example  # Example variables
+└── user_data.sh         # EC2 bootstrap script
+```
+
+### Cost Estimate (ap-south-1)
+
+| Resource | Type | Estimated Monthly Cost |
+|----------|------|------------------------|
+| EC2 | t2.small | ~$15-17 |
+| RDS | db.t3.micro | ~$12-15 |
+| EBS | 30GB gp3 | ~$2.50 |
+| Data Transfer | Minimal | ~$1-5 |
+| **Total** | | **~$30-40/month** |
+
+### Cleanup
+
+```bash
+# Destroy all AWS resources
+terraform destroy
+
+# Confirm with 'yes'
+```
+
+### Troubleshooting
+
+**EC2 instance not accessible:**
+```bash
+# Check security group rules
+# Ensure ports 22, 80, 1337 are open
+```
+
+**Strapi not connecting to RDS:**
+```bash
+# SSH into EC2 and check logs
+docker logs strapi
+
+# Verify RDS endpoint in environment
+cat /home/ec2-user/strapi/.env
+
+# Common fix: Ensure SSL is enabled
+# DATABASE_SSL=true
+# DATABASE_SSL_REJECT_UNAUTHORIZED=false
+```
+
+**"no pg_hba.conf entry" error:**
+This means RDS requires SSL. Ensure your `.env` has:
+```
+DATABASE_SSL=true
+DATABASE_SSL_REJECT_UNAUTHORIZED=false
+```
+
+**Docker image not pulling:**
+```bash
+# Ensure image is public or login to Docker Hub
+docker login
+```
+
+---
+
+
+

@@ -13,6 +13,7 @@ services:
       - postgres_data:/var/lib/postgresql
     networks:
       - myStrapiNetwork
+
   app:
     build: .
     networks:
