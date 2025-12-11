@@ -1,5 +1,5 @@
 # IAM Role for EC2 to access ECR
-resource "aws_iam_role" "ec2_ecr_role" {
+resource "aws_iam_role" "aadith_ec2_ecr_role" {
   name = "aadith-strapi-ec2-ecr-role"
 
   assume_role_policy = jsonencode({
