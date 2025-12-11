@@ -8,7 +8,7 @@ resource "aws_db_subnet_group" "strapi_db_subnet" {
   }
 }
 
-resource "aws_db_instance" "strapi_postgres" {
+resource "aws_db_instance" "aadith_strapi_postgres" {
   identifier             = "strapi-postgres"
   engine                 = "postgres"
   engine_version         = "17.6"
