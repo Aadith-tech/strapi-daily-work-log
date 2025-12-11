@@ -1,5 +1,4 @@
 name: CD - Terraform Deploy to EC2
-
 on:
   workflow_dispatch:
     inputs:
