@@ -15,7 +15,7 @@ output "strapi_url" {
 
 output "rds_hostname" {
   description = "RDS PostgreSQL hostname"
-  value       = aws_db_instance.strapi_postgres.address
+  value       = aws_db_instance.aadith_strapi_postgres.address
 }
 
 
