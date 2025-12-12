@@ -1,6 +1,6 @@
 # IAM Role for EC2 to access ECR
 resource "aws_iam_role" "aadith_ec2_ecr_role" {
-  name = "aadith-strapi-ec2-ecr-role11"
+  name = "aadith-strapi-ec2-ecr-role112"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -22,7 +22,7 @@ resource "aws_iam_role" "aadith_ec2_ecr_role" {
 
 # Policy to allow ECR access
 resource "aws_iam_role_policy" "ecr_policy" {
-  name = "aadith-strapi-ecr-policy11"
+  name = "aadith-strapi-ecr-policy112"
   role = aws_iam_role.aadith_ec2_ecr_role.id
 
   policy = jsonencode({
@@ -46,7 +46,7 @@ resource "aws_iam_role_policy" "ecr_policy" {
 
 # Instance profile to attach to EC2
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "aadith-strapi-ec2-profile11"
+  name = "aadith-strapi-ec2-profile112"
   role = aws_iam_role.aadith_ec2_ecr_role.name
 }
 
