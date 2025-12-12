@@ -22,7 +22,7 @@ variable "ami_id" {
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
-  default     = "m7i-flex.large"
+  default     = "t2.medium"
 }
 
 variable "db_instance_class" {
